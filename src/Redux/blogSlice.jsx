@@ -4,9 +4,7 @@ import axiosInstance from "../API/apiURL";
 
 const initialState = {
     articles: [],
-    latestArticles:[],
-    status: 'idle',
-    latestArticlesStatus:'idle'
+    status: 'idle'
 }
 
 export const getBlogArticles = createAsyncThunk('Blog/List', async () => {
@@ -29,7 +27,7 @@ export const blogSlice = createSlice({
         },
         [getBlogArticles.fulfilled]: (state, { payload }) => {
             state.status = 'success'
-            state.articles = payload
+            state.articles = payload?.data
         },
         [getBlogArticles.rejected]: (state) => {
             state.status = 'failed'

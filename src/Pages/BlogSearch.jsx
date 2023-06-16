@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import Sidebar from '../Component/Core/Blog/Sidebar'
-import { getBlogArticles } from '../Redux/blogSlice'
+import { findArticles } from '../Redux/blogSearchSlice'
 
-const Blog = () => {
+const BlogSearch = () => {
     const dispatch = useDispatch()
-    const { articles, status } = useSelector((state) => state?.Blog)
+    const { srctxt } = useParams()
+    const { searchedArticles, searchedStatus } = useSelector((state) => state?.SearchBlog)
 
     useEffect(() => {
-        dispatch(getBlogArticles())
-    }, [])
+        console.log(srctxt);
+        dispatch(findArticles(srctxt))
+    }, [srctxt])
+
+    console.log(searchedArticles);
 
     const recordsToDisplay = process.env.REACT_APP_RECORDS_TO_DISPLAY
     const [loadMoreRecords, setLoadMoreRecords] = useState(recordsToDisplay)
@@ -18,16 +22,17 @@ const Blog = () => {
         setLoadMoreRecords(loadMoreRecords + recordsToDisplay)
     }
 
+
     return (
         <>
             <div className="container">
                 <div className="row mt-5">
                     <div className="col-9">
                         {
-                            articles !== null && articles !== undefined && articles !== '' && status === 'success' ? (
+                            searchedArticles !== null && searchedArticles !== undefined && searchedArticles !== '' ? (
                                 <>
                                     {
-                                        articles?.slice(0, loadMoreRecords).map((item, index) => {
+                                        searchedArticles?.slice(0, loadMoreRecords).map((item, index) => {
                                             return (
                                                 <>
                                                     <div className="row border pt-3 pb-3 mb-3" key={index + 1}>
@@ -52,7 +57,7 @@ const Blog = () => {
                                         })
                                     }
                                     {
-                                        loadMoreRecords < articles?.length && (
+                                        loadMoreRecords < searchedArticles?.length && (
                                             <>
                                                 <div className='text-center'>
                                                     <button className="btn btn-primary" onClick={handleLoadmore}>Load more</button>
@@ -64,11 +69,21 @@ const Blog = () => {
                             ) : (
                                 <>
                                     {
-                                        status === 'loading' && <p>Loading...</p>
+
+                                        searchedStatus === 'loading' && <p>Loading...</p>
+
                                     }
                                 </>
                             )
                         }
+                        {
+                            searchedArticles?.length === 0 && <p>No matching records found!</p>
+                        }
+                        {/* Repeater Begin */}
+
+
+
+                        {/* Repeater End */}
 
                     </div>
                     <div className="col-3">
@@ -82,4 +97,4 @@ const Blog = () => {
     )
 }
 
-export default Blog
+export default BlogSearch

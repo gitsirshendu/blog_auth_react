@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
+import { getArticlesByCategory } from '../Redux/blogByCategorySlice'
 import Sidebar from '../Component/Core/Blog/Sidebar'
-import { getBlogArticles } from '../Redux/blogSlice'
 
-const Blog = () => {
+const BlogByCategory = () => {
+    const { id } = useParams()
     const dispatch = useDispatch()
-    const { articles, status } = useSelector((state) => state?.Blog)
+    const { articlesByCategory, articlesByCategoryStatus } = useSelector((state) => state?.BlogByCategory)
 
     useEffect(() => {
-        dispatch(getBlogArticles())
-    }, [])
+        dispatch(getArticlesByCategory(id))
+    }, [id])
 
     const recordsToDisplay = process.env.REACT_APP_RECORDS_TO_DISPLAY
     const [loadMoreRecords, setLoadMoreRecords] = useState(recordsToDisplay)
@@ -24,10 +25,10 @@ const Blog = () => {
                 <div className="row mt-5">
                     <div className="col-9">
                         {
-                            articles !== null && articles !== undefined && articles !== '' && status === 'success' ? (
+                            articlesByCategory !== null && articlesByCategory !== undefined && articlesByCategory !== '' && articlesByCategoryStatus == 'success' ? (
                                 <>
                                     {
-                                        articles?.slice(0, loadMoreRecords).map((item, index) => {
+                                        articlesByCategory?.data?.slice(0, loadMoreRecords).map((item, index) => {
                                             return (
                                                 <>
                                                     <div className="row border pt-3 pb-3 mb-3" key={index + 1}>
@@ -52,7 +53,7 @@ const Blog = () => {
                                         })
                                     }
                                     {
-                                        loadMoreRecords < articles?.length && (
+                                        loadMoreRecords < articlesByCategory?.data?.length && (
                                             <>
                                                 <div className='text-center'>
                                                     <button className="btn btn-primary" onClick={handleLoadmore}>Load more</button>
@@ -64,11 +65,16 @@ const Blog = () => {
                             ) : (
                                 <>
                                     {
-                                        status === 'loading' && <p>Loading...</p>
+                                        articlesByCategoryStatus === 'loading' && <p>Loading...</p>
                                     }
                                 </>
                             )
                         }
+                        {/* Repeater Begin */}
+
+
+
+                        {/* Repeater End */}
 
                     </div>
                     <div className="col-3">
@@ -82,4 +88,4 @@ const Blog = () => {
     )
 }
 
-export default Blog
+export default BlogByCategory

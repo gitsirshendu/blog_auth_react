@@ -10,6 +10,8 @@ import AboutUs from '../../Pages/AboutUs'
 import Blog from '../../Pages/Blog'
 import Article from '../../Pages/Article'
 import NoPageFound from '../../Pages/NoPageFound'
+import BlogByCategory from '../../Pages/BlogByCategory'
+import BlogSearch from '../../Pages/BlogSearch'
 
 const Routing = () => {
   function PrivateRoute({ children }) {
@@ -52,6 +54,14 @@ const Routing = () => {
     {
       Path: '/article/:id',
       Element: <Article />
+    },
+    {
+      Path: '/blog/category/:id',
+      Element: <BlogByCategory/>
+    },
+    {
+      Path: '/blog/search/:srctxt',
+      Element: <BlogSearch/>
     }
   ]
 
